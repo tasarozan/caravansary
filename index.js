@@ -14,9 +14,6 @@ serhat.createVan('Trailer Tent', 'Conway', 'Countryman', 1998, 4, 'Berlin', '$60
 robert.createVan('Campervan', 'VW', 'T5 T32', 2013, 4, 'Gelsenkirschen', '$115.00')
 ben.createVan('Other', 'Rapido', 'Folding Caravan', 1980, 4, 'Gingen', '$22.00')
 
-  ozan.addDescription('Vans are awesome!!!')
-
-  ozan.listings[0].addDescription('I am speed')
 
   ozan.listings[0].changeAvailabilitty()
 
@@ -25,4 +22,5 @@ ben.createVan('Other', 'Rapido', 'Folding Caravan', 1980, 4, 'Gingen', '$22.00')
   ozan.listings[0].addReview('U SUCK!!', thuan)
 
   console.log(ozan.memberTime)
-  console.log(ozan.listings[0].reviews.reviewer)
+  // console.log(ozan.listings[0].reviews.reviewer)
+  // console.log(ozan.listings[0].owner = thuan)
