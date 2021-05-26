@@ -4,7 +4,7 @@ class Person {
   listings = []
   vanBuddy = false
   description = ''
-  memberTime = (() => {
+  _memberTime = (() => {
       const today = new Date()
       return `Member since ${today.toLocaleString('en-US', { month: 'long' })}/${today.getFullYear()}`
     })()
@@ -16,10 +16,17 @@ class Person {
     this.location = location
   }
   createVan(type, make, model, year, berths, location, price) {
-    const van = new Van(type, make, model, year, berths, location, price)
+    const van = new Van(type, make, model, year, berths, location, price, this)
     this.listings.push(van)
-    van.owner = this
     return van
+  }
+  get memberTime() {
+    return this._memberTime
+  }
+  set memberTime(value) {
+    throw new Error(
+      'You can not change your membership time.'
+    )
   }
 }
 
