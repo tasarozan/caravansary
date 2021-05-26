@@ -18,9 +18,6 @@ class Van {
     this.location = location
     this.price = price
   }
-  addDescription(text) {
-    this.description = text
-  }
   changeAvailabilitty() {
     this.availability = !this.availability
   }
