@@ -1,15 +1,14 @@
 class Van {
-  owner = {}
   description = ''
   availability = true
   photos = []
-  reviews = {
+  _reviews = {
     text: '',
     reviewer: []
   }
   rating = 0
 
-  constructor(type, make, model, year, berths, location, price) {
+  constructor(type, make, model, year, berths, location, price, owner) {
     this.type = type
     this.make = make
     this.model = model
@@ -17,6 +16,7 @@ class Van {
     this.berths = berths
     this.location = location
     this.price = price
+    this._owner = owner
   }
   changeAvailabilitty() {
     this.availability = !this.availability
@@ -27,6 +27,18 @@ class Van {
   addReview(text, person) {
     this.reviews.text = text
     this.reviews.reviewer = person
+  }
+  get owner() {
+    return this._owner
+  }
+  set owner(person) {
+    throw new Error('Owner can not be changed.')
+  }
+  get reviews() {
+    return this._reviews
+  }
+  set reviews(newReview) {
+    throw new Error('Reviews can not be modified.')
   }
 }
 
