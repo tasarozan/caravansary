@@ -2,6 +2,7 @@ const Van = require('./van.js')
 
 class Person {
   listings = []
+  vanBuddy = false
   description = ''
   memberTime = (() => {
       const today = new Date()
@@ -13,9 +14,6 @@ class Person {
     this.lastName = lastName
     this.age = age
     this.location = location
-  }
-  addDescription(text) {
-    this.description = text
   }
   createVan(type, make, model, year, berths, location, price) {
     const van = new Van(type, make, model, year, berths, location, price)
