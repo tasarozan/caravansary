@@ -2,20 +2,47 @@
   "name": "caravansary",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ."
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "pretty-quick --staged",
+      "eslint --fix"
+    ],
+    "*.+(json|css|md)": [
+      "pretty-quick --staged"
+    ]
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tasarozan/caravansary.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Ozan Taşar",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/tasarozan/caravansary/issues"
   },
-  "homepage": "https://github.com/tasarozan/caravansary#readme"
+  "homepage": "https://github.com/tasarozan/caravansary#readme",
+  "devDependencies": {
+    "eslint": "7.2.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.23.3",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.23.2",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "husky": "^6.0.0",
+    "lint-staged": "^11.0.0",
+    "prettier": "^2.3.0"
+  }
 }

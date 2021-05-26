@@ -1,4 +1,4 @@
-const Person = require('./src/person')
+const Person = require('./person')
 
 const ozan = new Person('Ozan', 'Tasar', 24, 'Istanbul')
 const thuan = new Person('Thuan', 'Vo', 30, 'Hannover')
@@ -14,13 +14,12 @@ serhat.createVan('Trailer Tent', 'Conway', 'Countryman', 1998, 4, 'Berlin', '$60
 robert.createVan('Campervan', 'VW', 'T5 T32', 2013, 4, 'Gelsenkirschen', '$115.00')
 ben.createVan('Other', 'Rapido', 'Folding Caravan', 1980, 4, 'Gingen', '$22.00')
 
+// ozan.listings[0].changeAvailabilitty()
 
-  ozan.listings[0].changeAvailabilitty()
+// ozan.listings[0].addPhoto('Van.jpg')
 
-  ozan.listings[0].addPhoto('Van.jpg')
+// ozan.listings[0].addReview('U SUCK!!', thuan)
 
-  ozan.listings[0].addReview('U SUCK!!', thuan)
-
-  console.log(ozan.memberTime)
-  // console.log(ozan.listings[0].reviews.reviewer)
-  // console.log(ozan.listings[0].owner = thuan)
+console.log(ozan.memberTime)
+// console.log(ozan.listings[0].reviews.reviewer)
+// console.log(ozan.listings[0].owner = thuan)
