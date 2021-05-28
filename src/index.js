@@ -14,12 +14,18 @@ serhat.createVan('Trailer Tent', 'Conway', 'Countryman', 1998, 4, 'Berlin', '$60
 robert.createVan('Campervan', 'VW', 'T5 T32', 2013, 4, 'Gelsenkirschen', '$115.00')
 ben.createVan('Other', 'Rapido', 'Folding Caravan', 1980, 4, 'Gingen', '$22.00')
 
-// ozan.listings[0].changeAvailabilitty()
+ozan.listings[0].changeAvailability()
 
-// ozan.listings[0].addPhoto('Van.jpg')
+ozan.listings[0].addPhoto('Van.jpg')
 
-// ozan.listings[0].addReview('U SUCK!!', thuan)
+ozan.addReview('hey', thuan.listings[0])
 
-console.log(ozan.memberTime)
-// console.log(ozan.listings[0].reviews.reviewer)
-// console.log(ozan.listings[0].owner = thuan)
+// console.log(thuan.listings[0].reviews)
+
+ozan.createBookRequest(thuan.listings[0])
+
+console.log(ozan.bookRequests[0].bookVan(thuan.listings[0]))
+
+console.log(ozan.bookRequests[0])
+
+// ozan.bookRequests[0].bookApproval(thuan.listings[0], true)
