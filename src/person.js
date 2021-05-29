@@ -1,14 +1,15 @@
 const Van = require('./van')
-const BookVan = require('./book-van')
 
 class Person {
   listings = []
 
   bio = ''
 
-  rentHistory = []
+  rentedVans = []
 
-  bookRequests = []
+  bookRequestsReceived = []
+
+  bookRequestsSend = []
 
   constructor(firstName, lastName, age, location) {
     this.firstName = firstName
@@ -23,16 +24,38 @@ class Person {
     return van
   }
 
-  createBookRequest(van) {
-    const bookRequest = new BookVan(van, this)
-    this.bookRequests.push(bookRequest)
-    return bookRequest
+  bookVan(van) {
+    if (!van.availability) throw new Error('Van already booked.')
+    van.owner.bookRequestsReceived.push({ van, approval: false, customer: this })
+    this.bookRequestsSend.push({ van, approval: false, owner: van.owner })
+    console.log('Waiting for the owner approval.')
+  }
+
+  bookApproval(van, requestNumber, approval) {
+    if (this != van.owner) throw new Error('You need to be owner of the van in order to approve booking.')
+    this.bookRequestsReceived[requestNumber].approval = approval
+    this.bookRequestsReceived[requestNumber].customer.bookRequestsSend.filter(x => x.van == van).approval = approval
+    if (approval) {
+      console.log('Your book request approved. You can rent this van now.')
+    }
+    console.log(
+      this.bookRequestsReceived[requestNumber].approval
+        ? 'You approved this book request.'
+        : 'You denied this book request.'
+    )
+  }
+
+  rentVan(van, requestNumber) {
+    if (this.bookRequestsSend[requestNumber].approval) throw new Error('You need owners approval to rent this van.')
+    van.changeAvailability()
+    this.rentedVans.push(van)
+    console.log(`You successfully rented ${van.owner.firstName} ${van.owner.lastName}'s van.`)
   }
 
   addReview(text, van) {
-    if (this.listings.some(x => x == van)) throw new Error("You can't add review to your vans.")
-    van.addReview(text)
-    van.reviews.reviewer.push(this)
+    if (this.listings.includes(van)) throw new Error("You can't add review to your vans.")
+    if (!this.rentedVans.includes(van)) throw new Error('First you need to rent this van.')
+    van.addReview(text, this)
   }
 }
 
