@@ -3,10 +3,7 @@ class Van {
 
   availability = true
 
-  reviews = {
-    text: '',
-    reviewer: [],
-  }
+  reviews = []
 
   rating = 0
 
@@ -31,8 +28,8 @@ class Van {
     this.photos.push(photo)
   }
 
-  addReview(text) {
-    this.reviews.text = text
+  addReview(text, reviewer) {
+    this.reviews.push({ text, reviewer })
   }
 }
 
