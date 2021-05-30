@@ -28,12 +28,17 @@ class Van {
     this.photos.push(photo)
   }
 
-  addReview(text, reviewer) {
-    this.reviews.push({ text, reviewer })
+  addReview(text, reviewer, rating) {
+    this.reviews.push({ text, reviewer, rating })
   }
 
   trackLocation(customer) {
     this.location = customer.location
+  }
+
+  averageRating() {
+    console.log(this.reviews.reduce((a, b) => a + b.rating, 0))
+    this.rating = this.reviews.reduce((a, b) => a + b.rating, 0) / this.reviews.length
   }
 }
 
