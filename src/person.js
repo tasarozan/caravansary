@@ -44,7 +44,7 @@ class Person {
   }
 
   rentVan(van, requestNumber) {
-    if (this.bookRequests[requestNumber].approval) throw new Error('You need owners approval to rent this van.')
+    if (!van.owner.bookRequests[requestNumber].approval) throw new Error('You need owners approval to rent this van.')
     van.changeAvailability()
     this.rentedVans.push(van)
     console.log(`You successfully rented ${van.owner.firstName} ${van.owner.lastName}'s van.`)
@@ -67,10 +67,10 @@ class Person {
     )
   }
 
-  addReview(text, van) {
+  addReview(text, van, rating) {
     if (this.listings.includes(van)) throw new Error("You can't add review to your vans.")
     if (!this.rentedVans.includes(van)) throw new Error('First you need to rent this van.')
-    van.addReview(text, this)
+    van.addReview(text, this, rating)
   }
 }
 
