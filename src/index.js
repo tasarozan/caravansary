@@ -31,3 +31,11 @@ ozan.bookApproval(ozan.listings[0], 0, true)
 serhat.rentVan(ozan.listings[0], 0)
 
 serhat.addReview('5 stars.', ozan.listings[0])
+
+ozan.listings[0].trackLocation(serhat)
+
+serhat.backFromRent(ozan.listings[0])
+
+ozan.becomeVanBuddy(erkal)
+
+erkal.vanBuddyApproval(0, true)
