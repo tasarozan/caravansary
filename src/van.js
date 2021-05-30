@@ -31,6 +31,10 @@ class Van {
   addReview(text, reviewer) {
     this.reviews.push({ text, reviewer })
   }
+
+  trackLocation(customer) {
+    this.location = customer.location
+  }
 }
 
 module.exports = Van
