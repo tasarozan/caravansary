@@ -1,11 +1,9 @@
 class Van {
   description = ''
 
-  availability = true
+  availability = false
 
   reviews = []
-
-  rating = 0
 
   photos = []
 
@@ -20,7 +18,7 @@ class Van {
     this.owner = owner
   }
 
-  changeAvailability() {
+  toggleAvailability() {
     this.availability = !this.availability
   }
 
@@ -32,13 +30,12 @@ class Van {
     this.reviews.push({ text, reviewer, rating })
   }
 
-  trackLocation(customer) {
+  setLocation(customer) {
     this.location = customer.location
   }
 
-  averageRating() {
-    console.log(this.reviews.reduce((a, b) => a + b.rating, 0))
-    this.rating = this.reviews.reduce((a, b) => a + b.rating, 0) / this.reviews.length
+  get averageRating() {
+    return this.reviews.reduce((a, b) => a + b.rating, 0) / this.reviews.length
   }
 }
 
