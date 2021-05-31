@@ -24,30 +24,32 @@ ozan.listings[0].addPhoto('Van.jpg')
 
 // ozan.addReview('hey', thuan.listings[0], 2)
 
-serhat.bookVan(ozan.listings[0])
+// serhat.bookVan(ozan.listings[0])
 
-ozan.bookApproval(ozan.listings[0], 0, true)
+// ozan.bookApproval(ozan.listings[0], 0, true)
 
-serhat.rentVan(ozan.listings[0], 0)
+// serhat.rentVan(ozan.listings[0], 0)
 
-serhat.addReview('5 stars.', ozan.listings[0], 5)
+// serhat.addReview('5 stars.', ozan.listings[0], 5)
 
-serhat.backFromRent(ozan.listings[0])
+// serhat.backFromRent(ozan.listings[0])
 
-ben.bookVan(ozan.listings[0])
+// ben.bookVan(ozan.listings[0])
 
-ozan.bookApproval(ozan.listings[0], 1, true)
+// ozan.bookApproval(ozan.listings[0], 1, true)
 
-ben.rentVan(ozan.listings[0], 1)
+// ben.rentVan(ozan.listings[0], 1)
 
-ben.addReview('5 stars.', ozan.listings[0], 2)
+// ben.addReview('5 stars.', ozan.listings[0], 2)
 
-// ozan.listings[0].trackLocation(serhat)
+// // ozan.listings[0].trackLocation(serhat)
 
-// ozan.becomeVanBuddy(erkal)
+// // ozan.becomeVanBuddy(erkal)
 
-// erkal.vanBuddyApproval(0, true)
+// // erkal.vanBuddyApproval(0, true)
 
-ozan.listings[0].averageRating()
+// ozan.listings[0].averageRating()
 
-console.log(ozan.listings[0].rating)
+// console.log(ozan.listings[0].rating)
+
+// const hey = new Person('asda', 'dasd', 23, 'asd')
