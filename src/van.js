@@ -1,7 +1,7 @@
 class Van {
   description = ''
 
-  availability = false
+  availability = true
 
   reviews = []
 
