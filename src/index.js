@@ -16,40 +16,40 @@ ben.createVan('Other', 'Rapido', 'Folding Caravan', 1980, 4, 'Gingen', '$22.00')
 
 ozan.listings[0].addPhoto('Van.jpg')
 
-// ozan.bookVan(thuan.listings[0])
+ozan.bookVan(thuan.listings[0])
 
-// thuan.bookApproval(thuan.listings[0], 0, true)
+thuan.respondBookRequest(thuan.listings[0], 0, true)
 
-// ozan.rentVan(thuan.listings[0], 0)
+ozan.rentVan(thuan.listings[0], 0)
 
-// ozan.addReview('hey', thuan.listings[0], 2)
+ozan.reviewVan('hey', thuan.listings[0], 2)
 
-// serhat.bookVan(ozan.listings[0])
+ozan.returnVan(thuan.listings[0])
 
-// ozan.bookApproval(ozan.listings[0], 0, true)
+serhat.bookVan(ozan.listings[0])
 
-// serhat.rentVan(ozan.listings[0], 0)
+ozan.respondBookRequest(ozan.listings[0], 0, true)
 
-// serhat.addReview('5 stars.', ozan.listings[0], 5)
+serhat.rentVan(ozan.listings[0], 0)
 
-// serhat.backFromRent(ozan.listings[0])
+serhat.reviewVan('5 stars.', ozan.listings[0], 5)
 
-// ben.bookVan(ozan.listings[0])
+serhat.returnVan(ozan.listings[0])
 
-// ozan.bookApproval(ozan.listings[0], 1, true)
+ben.bookVan(ozan.listings[0])
 
-// ben.rentVan(ozan.listings[0], 1)
+ozan.respondBookRequest(ozan.listings[0], 1, true)
 
-// ben.addReview('5 stars.', ozan.listings[0], 2)
+ben.rentVan(ozan.listings[0], 1)
 
-// // ozan.listings[0].trackLocation(serhat)
+ben.reviewVan('5 stars.', ozan.listings[0], 2)
 
-// // ozan.becomeVanBuddy(erkal)
+ben.returnVan(ozan.listings[0])
 
-// // erkal.vanBuddyApproval(0, true)
+ozan.listings[0].setLocation(serhat)
 
-// ozan.listings[0].averageRating()
+ozan.sendVanBuddyRequest(erkal)
 
-// console.log(ozan.listings[0].rating)
+erkal.respondVanBuddyRequest(0, true)
 
-// const hey = new Person('asda', 'dasd', 23, 'asd')
+console.log(ozan.listings[0].averageRating)
