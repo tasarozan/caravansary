@@ -1,6 +1,6 @@
 const Van = require('./van')
 
-class Person {
+class User {
   listings = []
 
   bio = ''
@@ -19,7 +19,7 @@ class Person {
   }
 
   createVan(type, make, model, year, berths, location, price) {
-    const van = new Van(type, make, model, year, berths, location, price, this)
+    const van = new Van(type, make, model, year, berths, location, price, this.firstName)
 
     this.listings.push(van)
 
@@ -63,9 +63,9 @@ class Person {
     van.setLocation(van.owner)
   }
 
-  sendVanBuddyRequest(person) {
-    this.vanBuddyRequests.push({ sender: this, receiver: person, isApproved: false })
-    person.vanBuddyRequests.push({ sender: this, receiver: person, isApproved: false })
+  sendVanBuddyRequest(user) {
+    this.vanBuddyRequests.push({ sender: this, receiver: user, isApproved: false })
+    user.vanBuddyRequests.push({ sender: this, receiver: user, isApproved: false })
   }
 
   respondVanBuddyRequest(requestNumber, approvalStatus) {
@@ -86,4 +86,4 @@ class Person {
   }
 }
 
-module.exports = Person
+module.exports = User
