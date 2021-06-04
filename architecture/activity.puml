@@ -1,0 +1,21 @@
+@startuml Caravansary
+
+start
+
+if (Van Buddy or Rent a Van) then(Rent)
+  :Find a Van;
+  :Request Book;
+  repeat
+    :Wait for book respond;
+  repeat while (Book respond)
+  :Rent a Van;
+else (Van Buddy)
+  :Request Van Buddy;
+  repeat
+    :Wait for van buddy respond;
+  repeat while (Van Buddy Respond)
+endif
+
+stop
+
+@enduml

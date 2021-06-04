@@ -1,0 +1,26 @@
+@startuml Caravansary
+
+state "Become a member" as State1
+state "Login" as State2
+
+state Van {
+  [*] --> Book
+  Book --> Rent : Success
+}
+
+State VanBuddy {
+  [*] --> LookforVanBuddy
+  LookforVanBuddy --> Match: Success
+}
+
+State1 --> State2 : Succeeded
+State1 --> [*]: Aborted
+State2 --> LoggedIn : Succeeded
+State2 --> [*] : Aborted
+LoggedIn --> Van: Look for a Van
+LoggedIn --> VanBuddy: Look for a Van Buddy
+
+Van --> [*]: Rent Success
+VanBuddy --> [*]: Match Success
+
+@enduml

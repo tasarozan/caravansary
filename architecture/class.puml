@@ -1,0 +1,36 @@
+@startuml Caravansary
+
+class Person {
+  firstName: string
+  lastName: string
+  age: number
+  location: string
+  bio: string
+  bookRequests: Array
+  vanBuddyRequests: Array
+  listings: [Van]
+
+  constructor(firstName: string, lastName: string, age: number, location: string)
+  createVan(vanFeatures: Van)
+  bookVan(photo: Photo)
+  rentVan(van: Van)
+  becomeVanBuddy(person: Person)
+}
+
+class Van {
+  availability: Boolean
+  description: String
+  photos: Array
+  reviews: Array
+  price: Number
+  rating: Number
+  owner: Object
+
+  constructor(location: string, price: number, owner: object, )
+}
+
+Person "1"---> "0..*"Van : rent
+Van ---> "0..*" Person : rent
+Person --> Person : van buddy
+
+@enduml
