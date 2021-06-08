@@ -30,7 +30,7 @@ router.get('/', (req, res) => {
 
 router.get('/:userId', (req, res) => {
   const user = users[req.params.userId]
-  if (user) res.send(user)
+  if (user) res.render('user', { user })
   else res.sendStatus(404)
 })
 
