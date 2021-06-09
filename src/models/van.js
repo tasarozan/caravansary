@@ -1,42 +1,53 @@
+const mongoose = require('mongoose')
+const autopopulate = require('mongoose-autopopulate')
+
+const vanSchema = new mongoose.Schema({
+  type: String,
+  make: String,
+  model: String,
+  year: Number,
+  berths: Number,
+  location: String,
+  price: String,
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    autopopulate: true,
+  },
+  description: String,
+  availability: Boolean,
+  photos: Array,
+  reviews: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      autopopulate: true,
+    },
+  ],
+})
+
 class Van {
-  description = ''
-
-  availability = true
-
-  reviews = []
-
-  photos = []
-
-  constructor(type, make, model, year, berths, location, price, owner) {
-    this.type = type
-    this.make = make
-    this.model = model
-    this.year = year
-    this.berths = berths
-    this.location = location
-    this.price = price
-    this.owner = owner
-  }
-
-  toggleAvailability() {
+  async toggleAvailability() {
     this.availability = !this.availability
+    await this.save()
   }
 
-  addPhoto(photo) {
+  async addPhoto(photo) {
     this.photos.push(photo)
+    await this.save()
   }
 
-  addReview(text, reviewer, rating) {
+  async addReview(text, reviewer, rating) {
     this.reviews.push({ text, reviewer, rating })
+    await this.save()
   }
 
-  setLocation(customer) {
+  async setLocation(customer) {
     this.location = customer.location
-  }
-
-  get averageRating() {
-    return this.reviews.reduce((a, b) => a + b.rating, 0) / this.reviews.length
+    await this.save()
   }
 }
 
-module.exports = Van
+vanSchema.loadClass(Van)
+vanSchema.plugin(autopopulate)
+module.exports = mongoose.model('Van', vanSchema)

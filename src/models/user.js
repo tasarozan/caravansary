@@ -1,41 +1,78 @@
+const mongoose = require('mongoose')
+const autopopulate = require('mongoose-autopopulate')
 const Van = require('./van')
 
+const userSchema = new mongoose.Schema({
+  firstName: {
+    type: String,
+    required: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+  },
+  age: {
+    type: Number,
+    required: true,
+  },
+  location: {
+    type: String,
+    required: true,
+  },
+  listings: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Van',
+      autopopulate: {
+        maxDepth: 1,
+      },
+    },
+  ],
+  bio: String,
+  rentHistory: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Van',
+      autopopulate: true,
+    },
+  ],
+  vanBuddyRequests: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      autopopulate: true,
+    },
+  ],
+  bookRequests: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      autopopulate: true,
+    },
+  ],
+})
 class User {
-  listings = []
-
-  bio = ''
-
-  rentHistory = []
-
-  bookRequests = []
-
-  vanBuddyRequests = []
-
-  constructor(firstName, lastName, age, location) {
-    this.firstName = firstName
-    this.lastName = lastName
-    this.age = age
-    this.location = location
-  }
-
-  createVan(type, make, model, year, berths, location, price) {
-    const van = new Van(type, make, model, year, berths, location, price, this.firstName)
+  async createVan(type, make, model, year, berths, location, price) {
+    const van = await Van.create({ type, make, model, year, berths, location, price })
 
     this.listings.push(van)
 
+    await this.save()
+    await van.save()
     return van
   }
 
-  bookVan(van) {
+  async bookVan(van) {
     if (!van.availability) throw new Error('Van already booked.')
 
-    van.owner.bookRequests.push({ van, isApproved: false, customer: this, owner: van.owner })
-    this.bookRequests.push({ van, isApproved: false, customer: this, owner: van.owner })
+    van.owner.bookRequests.push({ van, isApproved: false, customer: this })
+    this.bookRequests.push({ van, isApproved: false, customer: this })
 
+    await this.save()
+    await van.save()
     console.log('Waiting for the owner approval.')
   }
 
-  respondBookRequest(van, requestNumber, approvalStatus) {
+  async respondBookRequest(van, requestNumber, approvalStatus) {
     if (this != van.owner) throw new Error('You need to be owner of the van in order to approve booking.')
 
     this.bookRequests[requestNumber].isApproved = approvalStatus
@@ -46,9 +83,10 @@ class User {
     console.log(
       this.bookRequests[requestNumber].isApproved ? 'You approved this book request.' : 'You denied this book request.'
     )
+    await this.save()
   }
 
-  rentVan(van, requestNumber) {
+  async rentVan(van, requestNumber) {
     if (!van.owner.bookRequests[requestNumber].isApproved)
       throw new Error("You need owner's approval to rent this van.")
 
@@ -56,19 +94,27 @@ class User {
     this.rentHistory.push(van)
 
     console.log(`You successfully rented ${van.owner.firstName} ${van.owner.lastName}'s van.`)
+
+    await this.save()
+    await van.save()
   }
 
-  returnVan(van) {
+  async returnVan(van) {
     van.toggleAvailability()
     van.setLocation(van.owner)
+
+    await van.save()
   }
 
-  sendVanBuddyRequest(user) {
+  async sendVanBuddyRequest(user) {
     this.vanBuddyRequests.push({ sender: this, receiver: user, isApproved: false })
     user.vanBuddyRequests.push({ sender: this, receiver: user, isApproved: false })
+
+    await this.save()
+    await user.save()
   }
 
-  respondVanBuddyRequest(requestNumber, approvalStatus) {
+  async respondVanBuddyRequest(requestNumber, approvalStatus) {
     this.vanBuddyRequests[requestNumber].isApproved = approvalStatus
 
     if (approvalStatus)
@@ -77,13 +123,20 @@ class User {
       )
 
     console.log("Sorry :'(")
+
+    await this.save()
   }
 
-  reviewVan(text, van, rating) {
+  async reviewVan(text, van, rating) {
     if (this.listings.includes(van)) throw new Error("You can't add review to your vans.")
     if (!this.rentHistory.includes(van)) throw new Error('First you need to rent this van.')
     van.addReview(text, this, rating)
+
+    await this.save()
+    await van.save()
   }
 }
 
-module.exports = User
+userSchema.loadClass(User)
+userSchema.plugin(autopopulate)
+module.exports = mongoose.model('User', userSchema)
