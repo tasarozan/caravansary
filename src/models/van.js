@@ -13,9 +13,13 @@ const vanSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     autopopulate: true,
+    required: true,
   },
   description: String,
-  availability: Boolean,
+  availability: {
+    type: Boolean,
+    default: true,
+  },
   photos: Array,
   reviews: [
     {
