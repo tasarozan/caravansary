@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const autopopulate = require('mongoose-autopopulate')
 const Van = require('./van')
+const BookRequest = require('./book-request')
+const VanBuddyRequest = require('./van-buddy-request')
 
 const userSchema = new mongoose.Schema({
   firstName: {
@@ -33,26 +35,33 @@ const userSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Van',
-      autopopulate: true,
+      autopopulate: {
+        maxDepth: 1,
+      },
     },
   ],
   vanBuddyRequests: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      autopopulate: true,
+      ref: 'VanBuddyRequest',
+      autopopulate: {
+        maxDepth: 1,
+      },
     },
   ],
   bookRequests: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      autopopulate: true,
+      ref: 'BookRequest',
+      autopopulate: {
+        maxDepth: 1,
+      },
     },
   ],
 })
 class User {
   async createVan(type, make, model, year, berths, location, price) {
-    const van = await Van.create({ type, make, model, year, berths, location, price })
+    const van = await Van.create({ type, make, model, year, berths, location, price, owner: this })
 
     this.listings.push(van)
 
@@ -61,28 +70,28 @@ class User {
     return van
   }
 
-  async bookVan(van) {
-    if (!van.availability) throw new Error('Van already booked.')
+  async createBookRequest(van) {
+    if (!van.availability) throw new Error('This van is not available.')
+    const bookRequest = await BookRequest.create({ van, customer: this })
 
-    van.owner.bookRequests.push({ van, isApproved: false, customer: this })
-    this.bookRequests.push({ van, isApproved: false, customer: this })
+    this.bookRequests.push(bookRequest)
+    van.owner.bookRequests.push(bookRequest)
 
     await this.save()
-    await van.save()
-    console.log('Waiting for the owner approval.')
+    await bookRequest.save()
+    await van.owner.save()
+    return bookRequest
   }
 
-  async respondBookRequest(van, requestNumber, approvalStatus) {
-    if (this != van.owner) throw new Error('You need to be owner of the van in order to approve booking.')
+  async respondToBookRequest(bookRequest, approvalStatus) {
+    if (this != bookRequest.van.owner) throw new Error('You need to be owner of the van in order to approve booking.')
 
-    this.bookRequests[requestNumber].isApproved = approvalStatus
-    this.bookRequests[requestNumber].customer.bookRequests.filter(x => x.van == van).isApproved = approvalStatus
+    if (approvalStatus) {
+      bookRequest.toggleBookRequestApprovalStatus()
 
-    if (approvalStatus) console.log('Your book request approved. You can rent this van now.')
+      console.log('Your book request approved. You can rent this van now.')
+    }
 
-    console.log(
-      this.bookRequests[requestNumber].isApproved ? 'You approved this book request.' : 'You denied this book request.'
-    )
     await this.save()
   }
 
@@ -106,24 +115,25 @@ class User {
     await van.save()
   }
 
-  async sendVanBuddyRequest(user) {
-    this.vanBuddyRequests.push({ sender: this, receiver: user, isApproved: false })
-    user.vanBuddyRequests.push({ sender: this, receiver: user, isApproved: false })
+  async createVanBuddyRequest(user) {
+    const vanBuddyRequest = await VanBuddyRequest.create({ customer: this })
+
+    this.vanBuddyRequests.push(vanBuddyRequest)
+    user.vanBuddyRequests.push(vanBuddyRequest)
 
     await this.save()
+    await vanBuddyRequest.save()
     await user.save()
+    return vanBuddyRequest
   }
 
-  async respondVanBuddyRequest(requestNumber, approvalStatus) {
-    this.vanBuddyRequests[requestNumber].isApproved = approvalStatus
-
-    if (approvalStatus)
+  async respondToVanBuddyRequest(vanBuddyRequest, approvalStatus) {
+    if (approvalStatus) {
+      vanBuddyRequest.toggleVanBuddyRequestApprovalStatus()
       console.log(
-        `Congrats!!! You just became van buddies with ${this.vanBuddyRequests[requestNumber].sender.firstName} ${this.vanBuddyRequests[requestNumber].sender.lastName}`
+        `Congrats!!! You just became van buddies with ${this.vanBuddyRequest.sender.firstName} ${this.vanBuddyRequest.sender.lastName}`
       )
-
-    console.log("Sorry :'(")
-
+    }
     await this.save()
   }
 
