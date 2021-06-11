@@ -63,7 +63,7 @@ router.patch('/:userId/:vanBuddyRequestId', async (req, res) => {
   const user = await User.findById(req.params.userId)
   const vanBuddyRequest = await VanBuddyRequest.findById(req.params.vanBuddyRequestId)
 
-  await user.respondToBookRequest(vanBuddyRequest, req.body.approvalStatus)
+  await user.respondToVanBuddyRequest(vanBuddyRequest, req.body.approvalStatus)
 
   res.send(vanBuddyRequest)
 })
