@@ -66,7 +66,6 @@ class User {
     this.listings.push(van)
 
     await this.save()
-    await van.save()
     return van
   }
 
@@ -78,7 +77,6 @@ class User {
     van.owner.bookRequests.push(bookRequest)
 
     await this.save()
-    await bookRequest.save()
     await van.owner.save()
     return bookRequest
   }
@@ -122,7 +120,6 @@ class User {
     user.vanBuddyRequests.push(vanBuddyRequest)
 
     await this.save()
-    await vanBuddyRequest.save()
     await user.save()
     return vanBuddyRequest
   }
