@@ -14,19 +14,12 @@ const bookRequestSchema = new mongoose.Schema({
   customer: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    autopopulate: true,
+    autopopulate: {
+      maxDepth: 1,
+    },
     required: true,
   },
 })
 
-class BookRequest {
-  async toggleBookRequestApprovalStatus() {
-    this.isApproved = !this.isApproved
-
-    await this.save()
-  }
-}
-
-bookRequestSchema.loadClass(BookRequest)
 bookRequestSchema.plugin(autopopulate)
 module.exports = mongoose.model('BookRequest', bookRequestSchema)
