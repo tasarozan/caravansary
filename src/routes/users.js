@@ -21,13 +21,12 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/initialize', async (req, res) => {
-  const ozan = await User.create({ firstName: 'ozan', lastName: 'Tasar', age: 24, location: 'Istanbul' })
-  const thuan = await User.create({ firstName: 'thuan', lastName: 'Vo', age: 31, location: 'Hannover' })
+  const ozan = await User.create({ firstName: 'Ozan', lastName: 'Tasar', age: 24, location: 'Istanbul' })
+  const thuan = await User.create({ firstName: 'Thuan', lastName: 'Vo', age: 31, location: 'Hannover' })
 
   await ozan.createVan('PrivateJet', 'Swift', 'Edge', 2018, 3, 'Istanbul', '$150.00')
-  await thuan.createBookRequest(ozan.listings[0])
 
-  res.send(ozan)
+  res.send(ozan, thuan)
 })
 
 router.get('/:userId', async (req, res) => {
@@ -36,35 +35,52 @@ router.get('/:userId', async (req, res) => {
   else res.sendStatus(404)
 })
 
-router.get('/:userId/:vanId', async (req, res) => {
-  const van = await Van.findById(req.params.vanId)
-  res.send(van)
+router.post('/:userId/van-buddy-requests', async (req, res) => {
+  const receiver = await User.findById(req.params.userId)
+  const sender = await User.findById(req.body.sender)
+  const vanBuddyRequest = await sender.createVanBuddyRequest(receiver, sender)
+
+  if (vanBuddyRequest) res.send(vanBuddyRequest)
+  else res.sendStatus(404)
 })
 
-router.get('/:userId/:bookRequestId', async (req, res) => {
+router.get('/:userId/book-requests/:bookRequestId', async (req, res) => {
   const bookRequest = await BookRequest.findById(req.params.bookRequestId)
   res.send(bookRequest)
 })
 
-router.get('/:userId/:vanBuddyRequestId', async (req, res) => {
+router.get('/:userId/van-buddy-requests/:vanBuddyRequestId', async (req, res) => {
   const vanBuddyRequest = await VanBuddyRequest.findById(req.params.vanBuddyRequestId)
   res.send(vanBuddyRequest)
 })
 
-router.patch('/:userId/:bookRequestId', async (req, res) => {
+router.patch('/:userId/book-requests/:bookRequestId/approval', async (req, res) => {
   const user = await User.findById(req.params.userId)
-  const bookRequest = await BookRequest.findById(req.params.bookRequestId)
+  const bookRequestId = await BookRequest.findById(req.params.bookRequestId)
+  const van = await Van.findById(bookRequestId.van)
 
-  await user.respondToBookRequest(bookRequest, req.body.approvalStatus)
+  if (user.listings.includes(van)) return res.sendStatus(401)
 
-  res.send(bookRequest)
+  const bookRequest = await BookRequest.findByIdAndUpdate(req.params.bookRequestId, {
+    isApproved: req.body.isApproved,
+  })
+
+  if (req.body.isApproved) bookRequest.customer.rentVan(van, bookRequest)
+
+  return res.send(bookRequest)
 })
-router.patch('/:userId/:vanBuddyRequestId', async (req, res) => {
-  const user = await User.findById(req.params.userId)
-  const vanBuddyRequest = await VanBuddyRequest.findById(req.params.vanBuddyRequestId)
 
-  await user.respondToVanBuddyRequest(vanBuddyRequest, req.body.approvalStatus)
+router.patch('/:userId/van-buddy-requests/:vanBuddyRequestId', async (req, res) => {
+  const receiver = await User.findById(req.params.userId)
+  const vanBuddyRequestId = await VanBuddyRequest.findById(req.params.vanBuddyRequestId)
 
-  res.send(vanBuddyRequest)
+  if (vanBuddyRequestId.reciver != receiver) return res.sendStatus(401)
+
+  const vanBuddyRequest = await VanBuddyRequest.findByIdAndUpdate(req.params.vanBuddyRequestId, {
+    isApproved: req.body.isApproved,
+  })
+
+  return res.send(vanBuddyRequest)
 })
+
 module.exports = router
