@@ -69,33 +69,20 @@ class User {
     return van
   }
 
-  async createBookRequest(van) {
+  async createBookRequest(van, customer) {
     if (!van.availability) throw new Error('This van is not available.')
-    const bookRequest = await BookRequest.create({ van, customer: this })
+    const bookRequest = await BookRequest.create({ van, customer })
 
-    this.bookRequests.push(bookRequest)
+    customer.bookRequests.push(bookRequest)
     van.owner.bookRequests.push(bookRequest)
 
-    await this.save()
+    await customer.save()
     await van.owner.save()
     return bookRequest
   }
 
-  async respondToBookRequest(bookRequest, approvalStatus) {
-    if (this != bookRequest.van.owner) throw new Error('You need to be owner of the van in order to approve booking.')
-
-    if (approvalStatus) {
-      bookRequest.toggleBookRequestApprovalStatus()
-
-      console.log('Your book request approved. You can rent this van now.')
-    }
-
-    await this.save()
-  }
-
-  async rentVan(van, requestNumber) {
-    if (!van.owner.bookRequests[requestNumber].isApproved)
-      throw new Error("You need owner's approval to rent this van.")
+  async rentVan(van, bookRequest) {
+    if (!bookRequest.isApproved) throw new Error("You need owner's approval to rent this van.")
 
     van.toggleAvailability()
     this.rentHistory.push(van)
@@ -113,25 +100,15 @@ class User {
     await van.save()
   }
 
-  async createVanBuddyRequest(user) {
-    const vanBuddyRequest = await VanBuddyRequest.create({ customer: this })
+  async createVanBuddyRequest(receiver, sender) {
+    const vanBuddyRequest = await VanBuddyRequest.create({ sender, receiver })
 
-    this.vanBuddyRequests.push(vanBuddyRequest)
-    user.vanBuddyRequests.push(vanBuddyRequest)
+    sender.vanBuddyRequests.push(vanBuddyRequest)
+    receiver.vanBuddyRequests.push(vanBuddyRequest)
 
-    await this.save()
-    await user.save()
+    await sender.save()
+    await receiver.save()
     return vanBuddyRequest
-  }
-
-  async respondToVanBuddyRequest(vanBuddyRequest, approvalStatus) {
-    if (approvalStatus) {
-      vanBuddyRequest.toggleVanBuddyRequestApprovalStatus()
-      console.log(
-        `Congrats!!! You just became van buddies with ${this.vanBuddyRequest.sender.firstName} ${this.vanBuddyRequest.sender.lastName}`
-      )
-    }
-    await this.save()
   }
 
   async reviewVan(text, van, rating) {
