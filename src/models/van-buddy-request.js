@@ -9,18 +9,18 @@ const vanBuddyRequestSchema = new mongoose.Schema({
   sender: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    autopopulate: true,
+    autopopulate: {
+      maxDepth: 1,
+    },
+  },
+  receiver: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    autopopulate: {
+      maxDepth: 1,
+    },
   },
 })
 
-class VanBuddyRequest {
-  async toggleVanBuddyRequestApprovalStatus() {
-    this.isApproved = !this.isApproved
-
-    await this.save()
-  }
-}
-
-vanBuddyRequestSchema.loadClass(VanBuddyRequest)
 vanBuddyRequestSchema.plugin(autopopulate)
 module.exports = mongoose.model('VanBuddyRequest', vanBuddyRequestSchema)
