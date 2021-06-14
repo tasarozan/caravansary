@@ -12,7 +12,9 @@ const vanSchema = new mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    autopopulate: true,
+    autopopulate: {
+      maxDepth: 1,
+    },
     required: true,
   },
   description: String,
