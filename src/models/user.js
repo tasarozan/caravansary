@@ -60,8 +60,8 @@ const userSchema = new mongoose.Schema({
   ],
 })
 class User {
-  async createVan(type, make, model, year, berths, location, price) {
-    const van = await Van.create({ type, make, model, year, berths, location, price, owner: this })
+  async createVan(type, location, price) {
+    const van = await Van.create({ type, location, price, owner: this })
 
     this.listings.push(van)
 
@@ -100,13 +100,13 @@ class User {
     await van.save()
   }
 
-  async createVanBuddyRequest(receiver, sender) {
-    const vanBuddyRequest = await VanBuddyRequest.create({ sender, receiver })
+  async createVanBuddyRequest(receiver) {
+    const vanBuddyRequest = await VanBuddyRequest.create({ sender: this, receiver })
 
-    sender.vanBuddyRequests.push(vanBuddyRequest)
+    this.vanBuddyRequests.push(vanBuddyRequest)
     receiver.vanBuddyRequests.push(vanBuddyRequest)
 
-    await sender.save()
+    await this.save()
     await receiver.save()
     return vanBuddyRequest
   }
