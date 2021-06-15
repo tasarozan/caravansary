@@ -15,12 +15,11 @@ router.get('/:vanId', async (req, res) => {
   res.send(van)
 })
 
-router.post('/:vanId/book-requests', async (req, res) => {
-  const van = await Van.findById(req.params.vanId)
-  const customer = await User.findById(req.body.customer)
-  const bookRequest = await customer.createBookRequest(van, customer)
+router.post('/:userId', async (req, res) => {
+  const user = await User.findById(req.params.userId)
+  const van = await user.createVan(req.body.type, req.body.location, req.body.price)
 
-  res.send(bookRequest)
+  res.send(van)
 })
 
 module.exports = router
