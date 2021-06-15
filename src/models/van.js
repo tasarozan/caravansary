@@ -2,13 +2,22 @@ const mongoose = require('mongoose')
 const autopopulate = require('mongoose-autopopulate')
 
 const vanSchema = new mongoose.Schema({
-  type: String,
+  type: {
+    type: String,
+    required: true,
+  },
   make: String,
   model: String,
   year: Number,
   berths: Number,
-  location: String,
-  price: String,
+  location: {
+    type: String,
+    required: true,
+  },
+  price: {
+    type: String,
+    required: true,
+  },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
