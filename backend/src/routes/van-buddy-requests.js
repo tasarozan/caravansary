@@ -3,7 +3,7 @@ const express = require('express')
 const router = express.Router()
 
 const User = require('../models/user')
-const Van = require('../models/van')
+const VanBuddyRequest = require('../models/van-buddy-request')
 
 router.post('/', async (req, res) => {
   const receiver = await User.findById(req.body.receiver)

@@ -4,6 +4,7 @@ const router = express.Router()
 
 const User = require('../models/user')
 const Van = require('../models/van')
+const BookRequest = require('../models/book-request')
 
 router.post('/', async (req, res) => {
   const van = await Van.findById(req.body.van)
