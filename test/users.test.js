@@ -66,12 +66,49 @@ describe('Users endpoints', () => {
     expect(finalVanOwnerUser.bookRequests.length).toBe(1)
     expect(finalRequesterUser.bookRequests.length).toBe(1)
 
-    console.log('finalVanOwnerUser.bookRequests[0].customer._id', finalVanOwnerUser.bookRequests[0].customer)
-    console.log('finalRequesterUser.bookRequests[0].van._id', finalRequesterUser.bookRequests[0].van)
-    console.log('finalVanOwnerUser.listings[0]._id', finalVanOwnerUser.listings[0]._id)
-    console.log(finalVanOwnerUser)
-
     expect(finalRequesterUser.bookRequests[0].van).toBe(finalVanOwnerUser.listings[0]._id)
     expect(finalVanOwnerUser.bookRequests[0].customer).toBe(finalRequesterUser._id)
+  })
+  it('user should be able to van buddies with another person', async () => {
+    // create a user
+    const user = {
+      firstName: 'Someone',
+      lastName: 'something',
+      age: 54,
+      location: 'Turkey',
+    }
+    console.log('first user ----------', user)
+
+    // create another user
+    const wantsToBeBuddy = {
+      firstName: 'Another',
+      lastName: 'Person',
+      age: 44,
+      location: 'Turkey',
+    }
+    console.log('another user --------------', wantsToBeBuddy)
+
+    const receiver = (await request(app).post('/users').send(user)).body
+    console.log('-------------receiver--', receiver)
+
+    const sender = (await request(app).post('/users').send(wantsToBeBuddy)).body
+    console.log('-------------sender--', sender)
+
+    // send van buddy request
+    await request(app).post(`/van-buddy-requests`).send({ receiver, sender })
+
+    console.log('HEYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY')
+    console.log('receiver.vanBuddyRequests.length', receiver.body)
+    console.log('sender.vanBuddyRequests.length', sender.body)
+
+    const finalReceiver = (await request(app).get(`/users/${receiver._id}`)).body
+    console.log('-------------finalReceiver--', finalReceiver)
+
+    const finalSender = (await request(app).get(`/users/${sender._id}`)).body
+    console.log('-------------finalSender--', finalSender)
+
+    expect(finalReceiver.vanBuddyRequests.length).toBe(1)
+    expect(finalSender.vanBuddyRequests.length).toBe(1)
+    expect(finalReceiver.vanBuddyRequests[0].finalSender).toBe(finalSender.vanBuddyRequests[0].finalReceiver)
   })
 })
