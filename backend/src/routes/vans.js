@@ -17,7 +17,12 @@ router.get('/:vanId', async (req, res) => {
 
 router.post('/:userId', async (req, res) => {
   const user = await User.findById(req.params.userId)
-  const van = await user.createVan(req.body.type, req.body.location, req.body.price)
+  const vanToCreate = {
+    type: req.body.type,
+    location: req.body.location,
+    price: req.body.price,
+  }
+  const van = await user.createVan(vanToCreate)
 
   res.send(van)
 })
