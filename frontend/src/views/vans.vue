@@ -1,28 +1,30 @@
 <script>
-import axios from 'axios'
-import VanCard from '@/components/van-card.vue'
+import { mapActions } from 'vuex'
 
 export default {
-  name: 'About',
-  components: {
-    VanCard,
-  },
+  name: 'Vans',
   data() {
     return {
       vans: [],
     }
   },
   async created() {
-    const vansRequest = await axios.get('/api/vans')
-    console.log(vansRequest)
-    this.vans = vansRequest.data
+    this.vans = await this.fetchVans()
+  },
+  methods: {
+    ...mapActions(['fetchVans']),
   },
 }
 </script>
 
 <template lang="pug">
   .vans
-    van-card(v-for="van in vans" :van="van")
+    div(v-for="van in vans" :van="van")
+      .box
+        h2 Type: {{ van.type }}
+        h2 Location: {{ van.location }}
+        h2 Price: {{ van.price }}
+        h2 Owner: {{ van.owner.firstName }} {{ van.owner.lastName }}
     .buttons
       button Share your Van
 </template>
@@ -31,5 +33,11 @@ export default {
 .buttons {
   text-align: center;
   background-color: blue;
+}
+.box {
+  padding: 2rem;
+  border: 1px solid #3339ff;
+  background: #8791f3;
+  border-radius: 0.3rem;
 }
 </style>
