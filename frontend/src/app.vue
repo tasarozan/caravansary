@@ -1,9 +1,27 @@
+<script>
+import { mapActions } from 'vuex'
+
+export default {
+  name: 'App',
+  methods: {
+    ...mapActions(['logout']),
+    async doLogout() {
+      await this.logout()
+      this.$router.push('/login')
+    },
+  },
+}
+</script>
+
 <template lang="pug">
   #app
     #nav
       router-link(to="/") User List |&nbsp;
-      router-link(to="/vans") Vans
-
+      router-link(to="/vans") Vans |&nbsp;
+      router-link(to="/profile") Profile |&nbsp;
+      router-link(to="/login") Login |&nbsp;
+      router-link(to="/register") Register |&nbsp;
+      a(@click="doLogout" href="#") Logout
     router-view
 </template>
 
