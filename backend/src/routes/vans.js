@@ -2,7 +2,6 @@ const express = require('express')
 
 const router = express.Router()
 
-const User = require('../models/user')
 const Van = require('../models/van')
 
 router.get('/', async (req, res) => {
@@ -15,8 +14,8 @@ router.get('/:vanId', async (req, res) => {
   res.send(van)
 })
 
-router.post('/:userId', async (req, res) => {
-  const user = await User.findById(req.params.userId)
+router.post('/', async (req, res) => {
+  const { user } = req
   const vanToCreate = {
     type: req.body.type,
     location: req.body.location,
