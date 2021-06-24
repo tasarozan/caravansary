@@ -30,10 +30,27 @@ router.post('/', async (req, res) => {
 })
 
 router.get('/initialize', async (req, res) => {
-  const ozan = await User.create({ firstName: 'Ozan', lastName: 'Tasar', age: 24, location: 'Istanbul' })
-  const thuan = await User.create({ firstName: 'Thuan', lastName: 'Vo', age: 31, location: 'Hannover' })
+  const ozan = new User({
+    firstName: 'Ozan',
+    lastName: 'Tasar',
+    age: 24,
+    location: 'Istanbul',
+    email: 'ozan@whatever.com',
+  })
+  await ozan.setPassword('test')
+  await ozan.save()
 
-  res.send(ozan, thuan)
+  const thuan = new User({
+    firstName: 'Thuan',
+    lastName: 'Vo',
+    age: 31,
+    location: 'Hannover',
+    email: 'thuan@nonsense.com',
+  })
+  await thuan.setPassword('password')
+  await thuan.save()
+
+  res.sendStatus(200)
 })
 
 router.get('/:userId', async (req, res) => {
