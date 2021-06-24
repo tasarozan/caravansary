@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const autopopulate = require('mongoose-autopopulate')
+const passportLocalMongoose = require('passport-local-mongoose')
 const Van = require('./van')
 const BookRequest = require('./book-request')
 const VanBuddyRequest = require('./van-buddy-request')
@@ -60,7 +61,8 @@ const userSchema = new mongoose.Schema({
   ],
 })
 class User {
-  async createVan(type, location, price) {
+  async createVan(information) {
+    const { type, location, price } = information
     const van = await Van.create({ type, location, price, owner: this })
 
     this.listings.push(van)
@@ -123,4 +125,7 @@ class User {
 
 userSchema.loadClass(User)
 userSchema.plugin(autopopulate)
+userSchema.plugin(passportLocalMongoose, {
+  usernameField: 'email',
+})
 module.exports = mongoose.model('User', userSchema)
