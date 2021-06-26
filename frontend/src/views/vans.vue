@@ -6,7 +6,7 @@ export default {
   data() {
     return {
       vans: [],
-      isShow: true,
+      isShow: false,
       type: '',
       location: '',
       price: '',
@@ -45,9 +45,10 @@ export default {
         h2 Type: {{ van.type }}
         h2 Location: {{ van.location }}
         h2 Price: {{ van.price }}
+        h2 Availability: {{ van.availability ? 'Available' : 'Not Available' }}
         h2 Owner: {{ van.owner.firstName }} {{ van.owner.lastName }}
     .buttons
-      button(@click="isShow = !isShow") Share your Van
+      button(@click="isShow = !isShow")  Share Your Van
       form(v-show="isShow" @submit="submitVan")
         label(for="type") Type:&nbsp;
           input(v-model="type" id="type" type="text" placeholder="Van type" required)
