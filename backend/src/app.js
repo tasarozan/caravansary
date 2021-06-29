@@ -10,6 +10,7 @@ const passport = require('passport')
 const User = require('./models/user')
 
 require('./database-connection')
+const socketService = require('./socket-service')
 
 const indexRouter = require('./routes/index')
 const usersRouter = require('./routes/users')
@@ -28,6 +29,8 @@ if (app.get('env') == 'development') {
     .createServer({ extraExts: ['pug'] })
     .watch([`${__dirname}/public`, `${__dirname}/views`])
 }
+
+app.set('io', socketService)
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))

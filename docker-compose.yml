@@ -23,7 +23,7 @@ services:
       - MONGODB_CONNECTION_STRING=mongodb://mongo/caravansary
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=(Host(`caravansary.localhost`) && PathPrefix(`/api`))"
+      - "traefik.http.routers.backend.rule=(Host(`caravansary.localhost`) && (PathPrefix(`/api`)) || PathPrefix(`/socket`))"
       - "traefik.http.routers.backend.entrypoints=web"
     ports:
       - 3000

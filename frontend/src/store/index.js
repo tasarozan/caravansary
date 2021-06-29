@@ -2,12 +2,35 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 
+import io from 'socket.io-client'
+
 Vue.use(Vuex)
+
+const socket = io()
+
+// socket.on('hello world!', () => {
+//   console.log('We received message from the websocket')
+// })
+
+// setInterval(() => {
+//   const number = Math.random()
+//   console.log('sending request', number)
+//   socket.emit('new message', number, res => {
+//     console.log('this is a response', res)
+//   })
+// }, 3000)
+
+// socket.emit('another api', res => {
+//   console.log(res)
+// })
 
 const mutations = {
   SET_USER: 'set user',
   CREATE_VAN: 'create van',
   CREATE_BOOK_REQUEST: 'create book request',
+  SET_LIVE_STREAM: 'set live stream',
+  ADD_LIVE_STREAM: 'add live stream',
+  ADD_MESSAGE_TO_LIVE_STREAM: 'add message to live stream',
 }
 
 const store = new Vuex.Store({
@@ -15,6 +38,9 @@ const store = new Vuex.Store({
     user: null,
     van: null,
     bookRequest: null,
+    currentLiveStream: null,
+    liveStreams: [],
+    liveStreamMessages: [],
   },
   mutations: {
     [mutations.SET_USER](state, user) {
@@ -25,6 +51,15 @@ const store = new Vuex.Store({
     },
     [mutations.CREATE_BOOK_REQUEST](state, bookRequest) {
       state.bookRequest = bookRequest
+    },
+    [mutations.SET_LIVE_STREAM](state, live) {
+      state.currentLiveStream = live
+    },
+    [mutations.ADD_LIVE_STREAM](state, stream) {
+      state.liveStreams.push(stream)
+    },
+    [mutations.ADD_MESSAGE_TO_LIVE_STREAM](state, message) {
+      state.liveStreamMessages.push(message)
     },
   },
   actions: {
@@ -63,8 +98,36 @@ const store = new Vuex.Store({
       const bookRequest = await axios.post('/api/book-requests', credentials)
       commit(mutations.CREATE_BOOK_REQUEST, bookRequest.data)
     },
+    async goLive({ state, commit }) {
+      socket.emit('go live', state.user._id, () => {
+        commit(mutations.SET_LIVE_STREAM, state.user._id)
+      })
+    },
+    async addLiveStream({ commit }, stream) {
+      commit(mutations.ADD_LIVE_STREAM, stream)
+    },
+    async sendMessageToLiveStream({ state, commit }, body) {
+      const message = {
+        body,
+        author: state.user.firstName,
+      }
+      commit(mutations.ADD_MESSAGE_TO_LIVE_STREAM, message)
+      socket.emit('new message', state.currentLiveStream, message)
+    },
+    async joinStream({ commit }, stream) {
+      socket.emit('join stream', stream)
+      commit(mutations.SET_LIVE_STREAM, stream)
+    },
   },
   modules: {},
+})
+
+socket.on('new live stream', user => {
+  store.dispatch('addLiveStream', user)
+})
+
+socket.on('new live stream message', message => {
+  store.commit(mutations.ADD_MESSAGE_TO_LIVE_STREAM, message)
 })
 
 export default async function init() {
