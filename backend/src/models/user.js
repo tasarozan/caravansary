@@ -71,14 +71,15 @@ class User {
     return van
   }
 
-  async createBookRequest(van, customer) {
+  async createBookRequest(van) {
     if (!van.availability) throw new Error('This van is not available.')
-    const bookRequest = await BookRequest.create({ van, customer })
+    if (this._id.equals(van.owner._id)) throw new Error("You can't book your own van!")
+    const bookRequest = await BookRequest.create({ van, customer: this })
 
-    customer.bookRequests.push(bookRequest)
+    this.bookRequests.push(bookRequest)
     van.owner.bookRequests.push(bookRequest)
 
-    await customer.save()
+    await this.save()
     await van.owner.save()
     return bookRequest
   }

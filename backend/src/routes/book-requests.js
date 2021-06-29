@@ -8,8 +8,9 @@ const BookRequest = require('../models/book-request')
 
 router.post('/', async (req, res) => {
   const van = await Van.findById(req.body.van)
-  const customer = await User.findById(req.body.customer)
-  const bookRequest = await customer.createBookRequest(van, customer)
+  const customer = req.user
+
+  const bookRequest = await customer.createBookRequest(van)
 
   res.send(bookRequest)
 })
