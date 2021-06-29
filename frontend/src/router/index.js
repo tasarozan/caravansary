@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import UserList from '../views/user-list.vue'
 import Login from '../views/login.vue'
 import Register from '../views/register.vue'
+import Profile from '../views/profile.vue'
 
 Vue.use(VueRouter)
 
@@ -50,7 +51,7 @@ export default function init(store) {
       {
         path: '/profile',
         name: 'profile',
-        component: UserList,
+        component: Profile,
         beforeEnter(to, from, next) {
           if (!store.state.user) return next('/login')
           return next()
