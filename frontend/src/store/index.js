@@ -7,12 +7,14 @@ Vue.use(Vuex)
 const mutations = {
   SET_USER: 'set user',
   CREATE_VAN: 'create van',
+  CREATE_BOOK_REQUEST: 'create book request',
 }
 
 const store = new Vuex.Store({
   state: {
     user: null,
     van: null,
+    bookRequest: null,
   },
   mutations: {
     [mutations.SET_USER](state, user) {
@@ -20,6 +22,9 @@ const store = new Vuex.Store({
     },
     [mutations.CREATE_VAN](state, van) {
       state.van = van
+    },
+    [mutations.CREATE_BOOK_REQUEST](state, bookRequest) {
+      state.bookRequest = bookRequest
     },
   },
   actions: {
@@ -53,6 +58,10 @@ const store = new Vuex.Store({
     async createVan({ commit }, credentials) {
       const van = await axios.post('/api/vans', credentials)
       commit(mutations.CREATE_VAN, van.data)
+    },
+    async createBookRequest({ commit }, credentials) {
+      const bookRequest = await axios.post('/api/book-requests', credentials)
+      commit(mutations.CREATE_BOOK_REQUEST, bookRequest.data)
     },
   },
   modules: {},
