@@ -44,6 +44,7 @@ app.use(
     store: new MongoStore({ mongoUrl: 'mongodb://mongo/caravansary', stringify: false }),
     cookie: {
       maxAge: 30 * 24 * 60 * 60 * 1000,
+      path: '/api',
     },
   })
 )
