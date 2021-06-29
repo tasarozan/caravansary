@@ -10,6 +10,7 @@ export default {
       type: '',
       location: '',
       price: '',
+      vanId: '',
 
       backendError: null,
     }
@@ -18,10 +19,8 @@ export default {
     this.vans = await this.fetchVans()
   },
   methods: {
-    ...mapActions(['fetchVans', 'createVan']),
+    ...mapActions(['fetchVans', 'createVan', 'createBookRequest']),
     async submitVan() {
-      // e.preventDefault()
-
       try {
         await this.createVan({
           type: this.type,
@@ -29,7 +28,16 @@ export default {
           price: this.price,
         })
 
-        this.$router.push('/vans')
+        this.vans = await this.fetchVans()
+      } catch (e) {
+        this.backendError = e.response.data.message
+      }
+    },
+    async submitBookRequest(vanId) {
+      try {
+        await this.createBookRequest({
+          van: vanId,
+        })
       } catch (e) {
         this.backendError = e.response.data.message
       }
@@ -40,22 +48,25 @@ export default {
 
 <template lang="pug">
   .vans
-    div(v-for="van in vans" :van="van")
+    div(v-for="(van, index) in vans" :key="index")
       .box
         h2 Type: {{ van.type }}
         h2 Location: {{ van.location }}
         h2 Price: {{ van.price }}
         h2 Availability: {{ van.availability ? 'Available' : 'Not Available' }}
         h2 Owner: {{ van.owner.firstName }} {{ van.owner.lastName }}
+      .bookRequestBtn
+        button(@click="submitBookRequest(van._id)") Request Book
     .buttons
       button(@click="isShow = !isShow")  Share Your Van
-      form(v-show="isShow" @submit="submitVan")
+      form(v-show="isShow" @submit.prevent
+      ="submitVan")
         label(for="type") Type:&nbsp;
           input(v-model="type" id="type" type="text" placeholder="Van type" required)
         label(for="location") Location:&nbsp;
           input(v-model="location" id="location" type="text" placeholder="Van location" required)
         label(for="price") Price:&nbsp;
-          input(v-model="price" id="type" type="text" placeholder="Van price" required)
+          input(v-model="price" id="price" type="text" placeholder="Van price" required)
         input(type="submit" value="Share")
       div(v-if="backendError") {{ backendError }}
 </template>
@@ -73,5 +84,10 @@ export default {
 label {
   display: block;
   margin: 1rem;
+}
+.bookRequestBtn {
+  text-align: right;
+  margin: 1rem;
+  padding: 1rem;
 }
 </style>
