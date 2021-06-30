@@ -40,6 +40,10 @@ const store = new Vuex.Store({
       const vansRequest = await axios.get('/api/vans')
       return vansRequest.data
     },
+    async fetchVan(store, id) {
+      const vanRequest = await axios.get(`/api/vans/${id}`)
+      return vanRequest.data
+    },
     async fetchSession({ commit }) {
       const user = await axios.get('/api/account/session')
       commit(mutations.SET_USER, user.data || null)
