@@ -47,7 +47,7 @@ router.get('/initialize', async (req, res) => {
     location: 'Hannover',
     email: 'thuan@nonsense.com',
   })
-  await thuan.setPassword('password')
+  await thuan.setPassword('test')
   await thuan.save()
 
   res.sendStatus(200)
