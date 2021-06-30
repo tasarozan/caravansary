@@ -32,6 +32,15 @@ const vanSchema = new mongoose.Schema({
     default: true,
   },
   photos: Array,
+  bookRequests: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'BookRequest',
+      autopopulate: {
+        maxDepth: 1,
+      },
+    },
+  ],
   reviews: [
     {
       type: mongoose.Schema.Types.ObjectId,
