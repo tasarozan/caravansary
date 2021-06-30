@@ -50,7 +50,7 @@ const userSchema = new mongoose.Schema({
       },
     },
   ],
-  bookRequests: [
+  sentBookRequests: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'BookRequest',
@@ -76,11 +76,11 @@ class User {
     if (this._id.equals(van.owner._id)) throw new Error("You can't book your own van!")
     const bookRequest = await BookRequest.create({ van, customer: this })
 
-    this.bookRequests.push(bookRequest)
-    van.owner.bookRequests.push(bookRequest)
+    this.sentBookRequests.push(bookRequest)
+    van.bookRequests.push(bookRequest)
 
     await this.save()
-    await van.owner.save()
+    await van.save()
     return bookRequest
   }
 
