@@ -1,7 +1,20 @@
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   name: 'VanCard',
-  props: ['van'],
+  props: { vanId: String },
+  data() {
+    return {
+      van: null,
+    }
+  },
+  async created() {
+    this.van = await this.fetchVan(this.vanId)
+  },
+  methods: {
+    ...mapActions(['fetchVan']),
+  },
 }
 </script>
 
