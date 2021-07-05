@@ -2,4 +2,8 @@ node_modules
 .history
 .eslintrc
 .prettierrc
+.prettierignore
 Dockerfile
+test
+jest.config.js
+jest.setup.js
