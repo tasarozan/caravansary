@@ -19,7 +19,7 @@ export default {
 </script>
 
 <template lang="pug">
-.box
+.box(v-if="van")
   h2 Type: {{ van.type }}
   h2 Location: {{ van.location }}
   h2 Price: {{ van.price }}

@@ -18,3 +18,5 @@ mongoose
   })
   .then(() => console.log('hey'))
   .catch(console.log)
+
+module.exports = mongoose.connection

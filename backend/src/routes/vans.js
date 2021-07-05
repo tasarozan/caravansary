@@ -15,7 +15,9 @@ router.get('/:vanId', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-  const { user } = req
+  const user = req.user
+  if (!user) return res.sendStatus(401)
+
   const vanToCreate = {
     type: req.body.type,
     location: req.body.location,
