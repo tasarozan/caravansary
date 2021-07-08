@@ -7,6 +7,9 @@ const session = require('express-session')
 const MongoStore = require('connect-mongo')
 const passport = require('passport')
 const cors = require('cors')
+const helmet = require('helmet')
+const mongoSanitize = require('express-mongo-sanitize')
+const { errors } = require('celebrate')
 
 const User = require('./models/user')
 
@@ -20,6 +23,8 @@ const vanBuddyRequestsRouter = require('./routes/van-buddy-requests')
 const accountRouter = require('./routes/account')
 
 const app = express()
+
+app.use(helmet())
 
 app.use(
   cors({
@@ -46,6 +51,9 @@ app.set('view engine', 'pug')
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+
+app.use(mongoSanitize({ replaceWith: '_' }))
+
 app.use(cookieParser())
 
 app.use(
@@ -83,6 +91,8 @@ app.use('/api/vans', vansRouter)
 app.use('/api/book-requests', bookRequestsRouter)
 app.use('/api/van-buddy-requests', vanBuddyRequestsRouter)
 app.use('/api/account', accountRouter)
+
+app.use(errors())
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
