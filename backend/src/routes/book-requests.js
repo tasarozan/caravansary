@@ -21,19 +21,18 @@ router.get('/:bookRequestId', async (req, res) => {
 })
 
 router.patch('/:bookRequestId', async (req, res) => {
-  const bookRequestId = await BookRequest.findById(req.params.bookRequestId)
-  const user = await User.findById(bookRequestId.van.owner)
-  const van = await Van.findById(bookRequestId.van)
+  const bookRequest = await BookRequest.findById(req.params.bookRequestId)
+  const user = req.user
+  const van = await Van.findById(bookRequest.van._id)
 
-  if (!user.listings.includes(van)) return res.sendStatus(401)
+  if (!user._id.equals(van.owner._id)) return res.sendStatus(401)
 
-  const bookRequest = await BookRequest.findByIdAndUpdate(req.params.bookRequestId, {
-    isApproved: req.body.isApproved,
-  })
+  await bookRequest.update({ approval: req.body.approval })
+  await bookRequest.save()
 
-  if (req.body.isApproved) bookRequest.customer.rentVan(van, bookRequest)
+  if (req.body.approval) bookRequest.customer.rentVan(van, bookRequest)
 
-  return res.send(bookRequest)
+  res.send(bookRequest)
 })
 
 module.exports = router
