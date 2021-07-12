@@ -13,10 +13,11 @@ router.post('/', async (req, res) => {
   const { firstName, lastName, age, location, email, password } = req.body
 
   const user = new User({ firstName, lastName, age, location, email })
+
   await user.setPassword(password)
   await user.save()
 
-  return user
+  res.send(user)
 })
 
 router.post('/session', passport.authenticate('local', { failWithError: true }), async (req, res) => {
