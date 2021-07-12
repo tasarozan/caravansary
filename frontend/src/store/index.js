@@ -55,7 +55,7 @@ const store = new Vuex.Store({
       const user = await axios.post('/api/account/session', credentials)
       commit(mutations.SET_USER, user.data)
     },
-    async register(store, user) {
+    register(store, user) {
       return axios.post('/api/account', user)
     },
     async logout({ commit }) {
@@ -69,6 +69,14 @@ const store = new Vuex.Store({
     async createBookRequest({ commit }, credentials) {
       const bookRequest = await axios.post('/api/book-requests', credentials)
       commit(mutations.CREATE_BOOK_REQUEST, bookRequest.data)
+    },
+    async fetchBookRequest(store, id) {
+      const bookRequest = await axios.get(`/api/book-requests/${id}`)
+      return bookRequest.data
+    },
+    async respondToBookRequest(store, credentials) {
+      const { bookRequestId } = credentials
+      await axios.patch(`/api/book-requests/${bookRequestId}`, credentials)
     },
   },
   modules: {},
