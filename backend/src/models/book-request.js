@@ -7,9 +7,9 @@ const bookRequestSchema = new mongoose.Schema({
     ref: 'Van',
     required: true,
   },
-  isApproved: {
-    type: Boolean,
-    default: false,
+  approval: {
+    type: String,
+    default: 'Pending',
   },
   customer: {
     type: mongoose.Schema.Types.ObjectId,
