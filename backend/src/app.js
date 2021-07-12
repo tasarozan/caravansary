@@ -8,7 +8,6 @@ const MongoStore = require('connect-mongo')
 const passport = require('passport')
 const cors = require('cors')
 const helmet = require('helmet')
-const mongoSanitize = require('express-mongo-sanitize')
 const { errors } = require('celebrate')
 
 const User = require('./models/user')
@@ -51,8 +50,6 @@ app.set('view engine', 'pug')
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-
-app.use(mongoSanitize({ replaceWith: '_' }))
 
 app.use(cookieParser())
 
