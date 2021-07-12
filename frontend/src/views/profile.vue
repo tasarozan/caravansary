@@ -1,13 +1,18 @@
 <script>
 import { mapState } from 'vuex'
 import VanCard from '@/components/van-card.vue'
+import BookRequestCard from '@/components/book-request-card.vue'
 
 export default {
   name: 'profile',
-  components: { VanCard },
+  components: { VanCard, BookRequestCard },
   data() {
     return {
       vanId: null,
+      bookRequestId: null,
+      approval: null,
+
+      backendError: null,
     }
   },
   computed: {
@@ -19,25 +24,25 @@ export default {
 <template lang="pug">
   .about
     h1 This is a user profile
-    h2 {{ user.firstName }} ({{ user.age }})
-    .listings
+    h2(v-if="user") {{ user.firstName }} ({{ user.age }})
+    .listings(v-if="user")
       p(v-if="!user.listings.length")
         | no listings yet
       p(v-else)
-        .van(v-for="van in user.listings")
-          h3 {{ van.type }}
-          p(v-if="!van.bookRequests.length")
-            | no book requests yet!
-          p(v-else)
-            .bookings(v-for="bookRequest in van.bookRequests")
-              h3 {{bookRequest.isApproved}}
-              h3 {{bookRequest.customer}}
-    .bookRequests
+        div(v-if="user")
+          .van(v-for="van in user.listings")
+            h3 {{ van.type }}
+            p(v-if="!van.bookRequests.length")
+              | no book requests yet!
+            p(v-else)
+              .bookings(v-for="bookRequest in van.bookRequests")
+                BookRequestCard(:bookRequestId="bookRequest")
+    .bookRequests(v-if="user")
       p(v-if="!user.sentBookRequests.length")
         | no book requests sent!
       p(v-else)
         .bookings(v-for="bookRequest in user.sentBookRequests")
-          h3 Approval: {{bookRequest.isApproved}}
+          h3 Approval: {{bookRequest.approval}}
           VanCard(:vanId="bookRequest.van")
 </template>
 
