@@ -85,7 +85,7 @@ class User {
   }
 
   async rentVan(van, bookRequest) {
-    if (!bookRequest.isApproved) throw new Error("You need owner's approval to rent this van.")
+    if (!bookRequest.approval) throw new Error("You need owner's approval to rent this van.")
 
     van.toggleAvailability()
     this.rentHistory.push(van)
