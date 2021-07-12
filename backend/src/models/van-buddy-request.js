@@ -2,9 +2,9 @@ const mongoose = require('mongoose')
 const autopopulate = require('mongoose-autopopulate')
 
 const vanBuddyRequestSchema = new mongoose.Schema({
-  isApproved: {
-    type: Boolean,
-    default: false,
+  approval: {
+    type: String,
+    default: 'Pending',
   },
   sender: {
     type: mongoose.Schema.Types.ObjectId,
