@@ -17,9 +17,7 @@ export default {
   },
   methods: {
     ...mapActions(['register']),
-    async submitLogin(e) {
-      e.preventDefault()
-
+    async submitRegister() {
       try {
         await this.register({
           firstName: this.firstName,
@@ -29,7 +27,7 @@ export default {
           email: this.email,
           password: this.password,
         })
-
+        alert('dsfsdf')
         this.$router.push('/login')
       } catch (e) {
         this.backendError = e.response.data.message
@@ -41,7 +39,7 @@ export default {
 
 <template lang="pug">
 .register
-    form( @submit="submitLogin")
+    form( @submit.prevent="submitRegister")
       h1 Create a new account
       label(for="firstName") Firstname:&nbsp;
         input(v-model="firstName" id="firstName" type="text" placeholder="Your firstname" required)
