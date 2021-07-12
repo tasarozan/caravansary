@@ -26,7 +26,7 @@ router.patch('/:vanBuddyRequestId', async (req, res) => {
   if (vanBuddyRequestId.receiver != receiver) return res.sendStatus(401)
 
   const vanBuddyRequest = await VanBuddyRequest.findByIdAndUpdate(req.params.vanBuddyRequestId, {
-    isApproved: req.body.isApproved,
+    approval: req.body.approval,
   })
 
   return res.send(vanBuddyRequest)
