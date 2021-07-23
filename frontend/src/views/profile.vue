@@ -22,7 +22,7 @@ export default {
 </script>
 
 <template lang="pug">
-  .about
+  .about(v-if="user")
     h1 This is a user profile
     h2(v-if="user") {{ user.firstName }} ({{ user.age }})
     .listings(v-if="user")
