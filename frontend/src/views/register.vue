@@ -27,7 +27,6 @@ export default {
           email: this.email,
           password: this.password,
         })
-        alert('dsfsdf')
         this.$router.push('/login')
       } catch (e) {
         this.backendError = e.response.data.message

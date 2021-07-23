@@ -23,10 +23,10 @@ export default {
           bookRequestId,
           approval,
         })
-        this.bookRequest = await this.fetchBookRequest(this.bookRequestId)
       } catch (e) {
         this.backendError = e.response.data.message
       }
+      this.bookRequest = await this.fetchBookRequest(this.bookRequestId)
       this.isLoading = false
     },
   },

@@ -31,6 +31,11 @@ export default function init(store) {
         component: () => import('../views/vans.vue'),
       },
       {
+        path: '/find-van-buddies',
+        name: 'FindVanBuddies',
+        component: () => import('../views/vans.vue'),
+      },
+      {
         path: '/register',
         name: 'register',
         component: Register,
