@@ -1,5 +1,5 @@
 <script>
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'Vans',
@@ -10,7 +10,7 @@ export default {
       type: '',
       location: '',
       price: '',
-      vanId: '',
+      isLoading: false,
 
       backendError: null,
     }
@@ -19,7 +19,7 @@ export default {
     this.vans = await this.fetchVans()
   },
   methods: {
-    ...mapActions(['fetchVans', 'createVan', 'createBookRequest']),
+    ...mapActions(['fetchVans', 'fetchSession', 'createVan', 'createBookRequest']),
     async submitVan() {
       try {
         await this.createVan({
@@ -27,13 +27,13 @@ export default {
           location: this.location,
           price: this.price,
         })
-
-        this.vans = await this.fetchVans()
       } catch (e) {
         this.backendError = e.response.data.message
       }
+      this.vans = await this.fetchVans()
     },
     async submitBookRequest(vanId) {
+      this.isLoading = true
       try {
         await this.createBookRequest({
           van: vanId,
@@ -41,7 +41,13 @@ export default {
       } catch (e) {
         this.backendError = e.response.data.message
       }
+      this.isLoading = false
+      this.vans = await this.fetchVans()
+      await this.fetchSession()
     },
+  },
+  computed: {
+    ...mapState(['user']),
   },
 }
 </script>
@@ -55,9 +61,18 @@ export default {
         h2 Price: {{ van.price }}
         h2 Availability: {{ van.availability ? 'Available' : 'Not Available' }}
         h2 Owner: {{ van.owner.firstName }} {{ van.owner.lastName }}
-      .bookRequestBtn
-        button(@click="submitBookRequest(van._id)") Request Book
-    .buttons
+      .bookRequestBtn(v-if="van.availability ")
+        div(v-if="user")
+          div(v-if="user._id != van.owner._id")
+            div(v-if="user.sentBookRequests.some(bookRequest => bookRequest.van == van._id)")
+              h2 Book request sent!
+            div(v-else)
+              button(:disabled="isLoading" @click="submitBookRequest(van._id)") {{isLoading ? 'Loading...' : 'Request Book'}}
+        div(v-else)
+          p
+            a(href="/register") Sign up
+            | &nbsp;to request a book
+    .buttons(v-if="user")
       button(@click="isShow = !isShow")  Share Your Van
       form(v-show="isShow" @submit.prevent
       ="submitVan")
