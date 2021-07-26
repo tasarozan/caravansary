@@ -1,5 +1,5 @@
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import VanCard from '@/components/van-card.vue'
 import BookRequestCard from '@/components/book-request-card.vue'
 
@@ -11,9 +11,24 @@ export default {
       vanId: null,
       bookRequestId: null,
       approval: null,
+      isLoading: false,
 
       backendError: null,
     }
+  },
+  methods: {
+    ...mapActions(['changeVanBuddyAvailability', 'fetchSession']),
+    async toggleVanBuddyAvailability(availability) {
+      this.isLoading = true
+      try {
+        this.changeVanBuddyAvailability({
+          vanBuddyAvailability: availability,
+        })
+      } catch (e) {
+        this.backendError = e.response.data.message
+      }
+      this.isLoading = false
+    },
   },
   computed: {
     ...mapState(['user']),
@@ -23,6 +38,12 @@ export default {
 
 <template lang="pug">
   .about(v-if="user")
+    .vanBuddyButton(v-if="user.vanBuddyAvailability")
+      h2 You are available to be van buddy!
+      button(:disabled="isLoading" @click="toggleVanBuddyAvailability(false)") Stop
+    .vanBuddyButton(v-else)
+      h2 You are not available to be van buddy!
+      button(:disabled="isLoading" @click="toggleVanBuddyAvailability(true)") Start
     h1 This is a user profile
     h2(v-if="user") {{ user.firstName }} ({{ user.age }})
     .listings(v-if="user")
@@ -31,7 +52,8 @@ export default {
       p(v-else)
         div(v-if="user")
           .van(v-for="van in user.listings")
-            h3 {{ van.type }}
+            h3 Type: {{ van.type }}
+            h3 Price: {{ van.price }}
             p(v-if="!van.bookRequests.length")
               | no book requests yet!
             p(v-else)
@@ -63,5 +85,8 @@ export default {
   padding: 2rem;
   border: 3px solid red;
   border-radius: 0.3rem;
+}
+.vanBuddyButton {
+  text-align: right;
 }
 </style>
