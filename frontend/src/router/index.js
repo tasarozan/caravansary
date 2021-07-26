@@ -33,7 +33,7 @@ export default function init(store) {
       {
         path: '/find-van-buddies',
         name: 'FindVanBuddies',
-        component: () => import('../views/vans.vue'),
+        component: () => import('../views/van-buddies.vue'),
       },
       {
         path: '/register',
