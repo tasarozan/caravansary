@@ -1,25 +1,53 @@
 <script>
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'FindVanBuddies',
   data() {
     return {
       users: [],
+
+      backendError: null,
     }
   },
   async created() {
-    this.users = await this.fetchUsers()
+    const allUsers = await this.fetchUsers()
+    this.users = allUsers.filter(user => user.vanBuddyAvailability)
   },
   methods: {
     ...mapActions(['fetchUsers']),
+  },
+  computed: {
+    ...mapState(['user']),
   },
 }
 </script>
 
 <template lang="pug">
-  .home
-    h1 CARAVANSARY
+  .container
     div(v-for="user in users")
-      router-link(:to="`/users/${user._id}`") {{ user.firstName }} {{ user.lastName }}
+      .box
+        h2 {{user.firstName}}
+
 </template>
+
+<style lang="scss">
+.buttons {
+  text-align: center;
+}
+.box {
+  padding: 2rem;
+  border: 1px solid #3339ff;
+  background: #8791f3;
+  border-radius: 0.3rem;
+}
+label {
+  display: block;
+  margin: 1rem;
+}
+.bookRequestBtn {
+  text-align: right;
+  margin: 1rem;
+  padding: 1rem;
+}
+</style>

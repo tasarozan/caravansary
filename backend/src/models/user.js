@@ -32,6 +32,10 @@ const userSchema = new mongoose.Schema({
     },
   ],
   bio: String,
+  vanBuddyAvailability: {
+    type: Boolean,
+    default: false,
+  },
   rentHistory: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -129,4 +133,5 @@ userSchema.plugin(autopopulate)
 userSchema.plugin(passportLocalMongoose, {
   usernameField: 'email',
 })
+userSchema.index({ email: 1 }, { unique: true })
 module.exports = mongoose.model('User', userSchema)

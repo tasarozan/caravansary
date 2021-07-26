@@ -24,7 +24,7 @@ export default {
   h2 Location: {{ van.location }}
   h2 Price: {{ van.price }}
   h2 Owner: {{ van.owner.firstName }} {{ van.owner.lastName }}
-
+  h2 Availability: {{ van.availability ? 'Available' : 'Not Available' }}
 </template>
 
 <style lang="scss">

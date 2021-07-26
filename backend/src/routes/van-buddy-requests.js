@@ -14,6 +14,14 @@ router.post('/', async (req, res) => {
   else res.sendStatus(404)
 })
 
+router.patch('/', async (req, res) => {
+  const { _id } = req.user
+  const { vanBuddyAvailability } = req.body
+  const user = await User.findByIdAndUpdate(_id, { vanBuddyAvailability }, { new: true })
+
+  res.send(user)
+})
+
 router.get('/:vanBuddyRequestId', async (req, res) => {
   const vanBuddyRequest = await VanBuddyRequest.findById(req.params.vanBuddyRequestId)
   res.send(vanBuddyRequest)
