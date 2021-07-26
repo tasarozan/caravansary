@@ -78,6 +78,10 @@ const store = new Vuex.Store({
       const { bookRequestId } = credentials
       await axios.patch(`/api/book-requests/${bookRequestId}`, credentials)
     },
+    async changeVanBuddyAvailability({ commit }, vanBuddyAvailability) {
+      const user = await axios.patch(`/api/van-buddy-requests`, vanBuddyAvailability)
+      commit(mutations.SET_USER, user.data)
+    },
   },
   modules: {},
 })
