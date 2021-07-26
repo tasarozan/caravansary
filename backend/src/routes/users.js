@@ -3,6 +3,9 @@ const express = require('express')
 const router = express.Router()
 
 const User = require('../models/user')
+const Van = require('../models/van')
+const BookRequest = require('../models/book-request')
+const VanBuddyRequest = require('../models/van-buddy-request')
 
 /* GET users listing. */
 router.get('/', async (req, res) => {
@@ -30,6 +33,11 @@ router.post('/', async (req, res) => {
 })
 
 router.get('/initialize', async (req, res) => {
+  await User.deleteMany({})
+  await Van.deleteMany({})
+  await BookRequest.deleteMany({})
+  await VanBuddyRequest.deleteMany({})
+
   const ozan = new User({
     firstName: 'Ozan',
     lastName: 'Tasar',
@@ -48,6 +56,12 @@ router.get('/initialize', async (req, res) => {
     email: 'thuan@nonsense.com',
   })
   await thuan.setPassword('test')
+  await thuan.save()
+
+  await ozan.createVan({ type: 'caravan', location: 'Istanbul', price: '100$' })
+  await thuan.createVan({ type: 'campervan', location: 'Hannover', price: '200$' })
+
+  await ozan.save()
   await thuan.save()
 
   res.sendStatus(200)

@@ -23,6 +23,7 @@ export default {
         router-link(to="/") User List
         router-link(to="/vans") Vans
         router-link(to="/find-van-buddies") Find Van buddies
+        a(href="/api/users/initialize") Init
       .login-items
         router-link(to="/profile" v-if="user") Profile
         router-link(to="/login" v-if="!user") Login
