@@ -6,9 +6,12 @@ const User = require('../models/user')
 const VanBuddyRequest = require('../models/van-buddy-request')
 
 router.post('/', async (req, res) => {
-  const receiver = await User.findById(req.body.receiver)
-  const sender = await User.findById(req.body.sender)
-  const vanBuddyRequest = await sender.createVanBuddyRequest(receiver)
+  const { receiver } = req.body
+  const { _id } = req.user
+
+  const recipient = await User.findById(receiver)
+  const user = await User.findById(_id)
+  const vanBuddyRequest = await user.createVanBuddyRequest(recipient)
 
   if (vanBuddyRequest) res.send(vanBuddyRequest)
   else res.sendStatus(404)
@@ -28,13 +31,9 @@ router.get('/:vanBuddyRequestId', async (req, res) => {
 })
 
 router.patch('/:vanBuddyRequestId', async (req, res) => {
-  const receiver = await User.findById(req.body.receiver)
-  const vanBuddyRequestId = await VanBuddyRequest.findById(req.params.vanBuddyRequestId)
-
-  if (vanBuddyRequestId.receiver != receiver) return res.sendStatus(401)
-
+  const { approval } = req.body
   const vanBuddyRequest = await VanBuddyRequest.findByIdAndUpdate(req.params.vanBuddyRequestId, {
-    approval: req.body.approval,
+    approval,
   })
 
   return res.send(vanBuddyRequest)
