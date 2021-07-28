@@ -15,7 +15,18 @@ export default {
     this.users = allUsers.filter(user => user.vanBuddyAvailability)
   },
   methods: {
-    ...mapActions(['fetchUsers']),
+    ...mapActions(['fetchUsers', 'createVanBuddyRequest', 'fetchSession']),
+
+    async submitVanBuddyRequest(personId) {
+      try {
+        await this.createVanBuddyRequest({
+          receiver: personId,
+        })
+      } catch (e) {
+        this.backendError = e.response.data.message
+      }
+      await this.fetchSession()
+    },
   },
   computed: {
     ...mapState(['user']),
@@ -24,11 +35,18 @@ export default {
 </script>
 
 <template lang="pug">
-  .container
-    div(v-for="user in users")
-      .box
-        h2 {{user.firstName}}
-
+  .vanBuddies
+    div(v-for="person in users")
+      div(v-if="person")
+        .box
+          h2 {{person.firstName}} {{ person.lastName }}
+          h2 {{person.location}}
+        div(v-if="user")
+          .vanBuddyRequestButton(v-if="person._id != user._id")
+            div(v-if="!user.vanBuddyRequests.some(request => request.sender == user._id)")
+              button(@click="submitVanBuddyRequest(person._id)") {{`Become van buddies with ${person.firstName} ${person.lastName}`}}
+            div(v-else)
+              h3 Van Buddy Request Sent
 </template>
 
 <style lang="scss">
@@ -45,7 +63,7 @@ label {
   display: block;
   margin: 1rem;
 }
-.bookRequestBtn {
+.vanBuddyRequestButton {
   text-align: right;
   margin: 1rem;
   padding: 1rem;
