@@ -2,14 +2,16 @@
 import { mapState, mapActions } from 'vuex'
 import VanCard from '@/components/van-card.vue'
 import BookRequestCard from '@/components/book-request-card.vue'
+import VanBuddyRequestCard from '@/components/van-buddy-request-card.vue'
 
 export default {
   name: 'profile',
-  components: { VanCard, BookRequestCard },
+  components: { VanCard, BookRequestCard, VanBuddyRequestCard },
   data() {
     return {
       vanId: null,
       bookRequestId: null,
+      vanBuddyRequestId: null,
       approval: null,
       isLoading: false,
 
@@ -45,12 +47,13 @@ export default {
       h2 You are not available to be van buddy!
       button(:disabled="isLoading" @click="toggleVanBuddyAvailability(true)") Start
     h1 This is a user profile
-    h2(v-if="user") {{ user.firstName }} ({{ user.age }})
-    .listings(v-if="user")
+    h2 {{ user.firstName }} ({{ user.age }})
+    h2 Listings
+    .listings
       p(v-if="!user.listings.length")
         | no listings yet
       p(v-else)
-        div(v-if="user")
+        div
           .van(v-for="van in user.listings")
             h3 Type: {{ van.type }}
             h3 Price: {{ van.price }}
@@ -59,13 +62,19 @@ export default {
             p(v-else)
               .bookings(v-for="bookRequest in van.bookRequests")
                 BookRequestCard(:bookRequestId="bookRequest")
-    .bookRequests(v-if="user")
+    h2 Book Requests Sent
+    .bookRequests
       p(v-if="!user.sentBookRequests.length")
         | no book requests sent!
       p(v-else)
         .bookings(v-for="bookRequest in user.sentBookRequests")
           h3 Approval: {{bookRequest.approval}}
           VanCard(:vanId="bookRequest.van")
+    h2 Sent Van Buddy Requests
+    .vanBuddyRequests
+      p(v-if="!user.vanBuddyRequests.filter(request => request.sender == user._id)")
+        div(v-for="vanBuddyRequest in user.vanBuddyRequests")
+          VanBuddyRequestCard(:vanBuddyRequestId="vanBuddyRequest._id")
 </template>
 
 <style lang="scss">

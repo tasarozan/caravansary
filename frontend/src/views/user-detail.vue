@@ -22,5 +22,13 @@ export default {
 <template lang="pug">
   .about
     h1 This is a user detail
+    .vanBuddyAvailability(v-if="user")
+      h3 {{user.vanBuddyAvailability ? 'Available for van buddy' : 'Not available for van buddy'}}
     UserCard(:user="user" v-if="user")
 </template>
+
+<style lang="scss">
+.vanBuddyAvailability {
+  text-align: right;
+}
+</style>
