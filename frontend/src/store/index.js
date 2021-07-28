@@ -11,6 +11,7 @@ const mutations = {
   SET_USER: 'set user',
   CREATE_VAN: 'create van',
   CREATE_BOOK_REQUEST: 'create book request',
+  CREATE_VAN_BUDDY_REQUEST: 'create van buddy request',
 }
 
 const store = new Vuex.Store({
@@ -18,6 +19,7 @@ const store = new Vuex.Store({
     user: null,
     van: null,
     bookRequest: null,
+    vanBuddyRequest: null,
   },
   mutations: {
     [mutations.SET_USER](state, user) {
@@ -28,6 +30,9 @@ const store = new Vuex.Store({
     },
     [mutations.CREATE_BOOK_REQUEST](state, bookRequest) {
       state.bookRequest = bookRequest
+    },
+    [mutations.CREATE_VAN_BUDDY_REQUEST](state, vanBuddyRequest) {
+      state.vanBuddyRequest = vanBuddyRequest
     },
   },
   actions: {
@@ -79,8 +84,20 @@ const store = new Vuex.Store({
       await axios.patch(`/api/book-requests/${bookRequestId}`, credentials)
     },
     async changeVanBuddyAvailability({ commit }, vanBuddyAvailability) {
-      const user = await axios.patch(`/api/van-buddy-requests`, vanBuddyAvailability)
+      const user = await axios.patch('/api/van-buddy-requests', vanBuddyAvailability)
       commit(mutations.SET_USER, user.data)
+    },
+    async createVanBuddyRequest({ commit }, credentials) {
+      const vanBuddyRequest = await axios.post('/api/van-buddy-requests', credentials)
+      commit(mutations.CREATE_VAN_BUDDY_REQUEST, vanBuddyRequest.data)
+    },
+    async fetchVanBuddyRequest(store, id) {
+      const vanBuddyRequest = await axios.get(`/api/van-buddy-requests/${id}`)
+      return vanBuddyRequest.data
+    },
+    async respondToVanBuddyRequest(store, credentials) {
+      const { vanBuddyRequestId } = credentials
+      await axios.patch(`/api/van-buddy-requests/${vanBuddyRequestId}`, credentials)
     },
   },
   modules: {},
